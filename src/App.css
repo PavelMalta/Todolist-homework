@@ -2,3 +2,6 @@
 .is-done {
     opacity: 0.5;
 }
+.error-message {
+    color: red;
+}

@@ -1,4 +1,4 @@
-import {IconButton} from "@material-ui/core";
+import {IconButton, TextField} from "@material-ui/core";
 import React, {ChangeEvent, KeyboardEvent, useState} from "react";
 import {AddComment} from "@material-ui/icons";
 
@@ -30,15 +30,17 @@ export function AddItemForm(props: AddItemFormPropsType) {
 
     return (
         <div>
-            <input value={newTaskTitle}
-                   onChange={onNewTitleChangeHandler}
-                   onKeyPress={onKeyPressHandler}
-                   className={error ? "error" : ""}
+            <TextField  value={newTaskTitle}
+                        onChange={onNewTitleChangeHandler}
+                        onKeyPress={onKeyPressHandler}
+                        error={!!error}
+                        variant="outlined"
+                        label={"type value"}
+                        helperText={error}
             />
             <IconButton color="primary" onClick={addTask}>
                <AddComment/>
             </IconButton>
-            {error && <div className={"error-message"}>{error}</div>}
 
         </div>
     )
