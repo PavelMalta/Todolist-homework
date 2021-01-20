@@ -50,7 +50,7 @@ export function Todolist(props: PropsType) {
                 </IconButton>
             </h3>
             <AddItemForm addItem={addTask}/>
-            <ul>
+            <div>
                 {
                     props.tasks.map(t => {
                         const onRemoveHandler = () => props.removeTask(t.id, props.id)
@@ -62,7 +62,7 @@ export function Todolist(props: PropsType) {
                         }
 
                         return (
-                            <li key={t.id} className={t.isDone ? "is-done" : ""}>
+                            <div key={t.id} className={t.isDone ? "is-done" : ""}>
                                 <Checkbox
                                     color="primary"
                                     checked={t.isDone}
@@ -73,11 +73,11 @@ export function Todolist(props: PropsType) {
                                     <Delete/>
                                 </IconButton>
 
-                            </li>)
+                            </div>)
                     })
                 }
 
-            </ul>
+            </div>
             <div>
                 <Button
                     variant="contained"
