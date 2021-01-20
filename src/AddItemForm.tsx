@@ -1,4 +1,6 @@
+import {IconButton} from "@material-ui/core";
 import React, {ChangeEvent, KeyboardEvent, useState} from "react";
+import {AddComment} from "@material-ui/icons";
 
 type AddItemFormPropsType = {
     addItem: (title: string) => void
@@ -33,7 +35,9 @@ export function AddItemForm(props: AddItemFormPropsType) {
                    onKeyPress={onKeyPressHandler}
                    className={error ? "error" : ""}
             />
-            <button onClick={addTask}>+</button>
+            <IconButton color="primary" onClick={addTask}>
+               <AddComment/>
+            </IconButton>
             {error && <div className={"error-message"}>{error}</div>}
 
         </div>
