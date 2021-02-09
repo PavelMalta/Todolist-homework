@@ -1,4 +1,4 @@
-import {FilterValuesType, TaskStateType, TodoListType} from "../App";
+import {FilterValuesType, TasksStateType, TodoListType} from "../App";
 import {v1} from "uuid";
 
 export type removeTaskActionType = {
@@ -11,12 +11,19 @@ export type AddTaskActionType = {
     title: string
     todoListID: string
 }
+export type ChangeTaskStatusActionType = {
+    type: 'CHANGE-TASK-STATUS'
+    taskID: string
+    isDone: boolean
+    todoListID: string
+
+}
 
 
-type ActionsType = removeTaskActionType | AddTaskActionType
+type ActionsType = removeTaskActionType | AddTaskActionType | ChangeTaskStatusActionType
 
 
-export const tasksReducer = (state: TaskStateType, action: ActionsType):TaskStateType => {
+export const tasksReducer = (state: TasksStateType, action: ActionsType): TasksStateType => {
     switch (action.type) {
         case 'REMOVE-TASK': {
             const stateCopy = {...state};
@@ -34,6 +41,16 @@ export const tasksReducer = (state: TaskStateType, action: ActionsType):TaskStat
             return stateCopy
         }
 
+        case 'CHANGE-TASK-STATUS': {
+            const stateCopy = {...state};
+            const tasks = stateCopy[action.todoListID];
+            let task = tasks.find(t => t.id === action.taskID);
+            if (task) {
+                task.isDone = action.isDone;
+            }
+            return stateCopy
+        }
+
         default:
             throw new Error("I don't understand this action type")
     }
@@ -46,10 +63,18 @@ export const removeTaskAC = (taskId: string, todoListID: string): removeTaskActi
         todoListID
     }
 }
-export const addTaskAC = (title: string, todoListID: string):AddTaskActionType => {
+export const addTaskAC = (title: string, todoListID: string): AddTaskActionType => {
     return {
         type: 'ADD-TASK',
         title,
+        todoListID
+    }
+}
+export const changeTaskStatusAC = (taskID: string, isDone: boolean, todoListID: string): ChangeTaskStatusActionType => {
+    return {
+        type: 'CHANGE-TASK-STATUS',
+        taskID,
+        isDone,
         todoListID
     }
 }
