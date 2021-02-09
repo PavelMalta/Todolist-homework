@@ -6,13 +6,14 @@ export type removeTaskActionType = {
     taskId: string,
     todoListID: string
 }
-export type ActionType2 = {
-    type: '2'
+export type AddTaskActionType = {
+    type: 'ADD-TASK'
     title: string
+    todoListID: string
 }
 
 
-type ActionsType = removeTaskActionType | ActionType2
+type ActionsType = removeTaskActionType | AddTaskActionType
 
 
 export const tasksReducer = (state: TaskStateType, action: ActionsType):TaskStateType => {
@@ -24,8 +25,13 @@ export const tasksReducer = (state: TaskStateType, action: ActionsType):TaskStat
             stateCopy[action.todoListID] = filteredTask
             return stateCopy
         }
-        case '2': {
-            return {...state}
+        case 'ADD-TASK': {
+            const stateCopy = {...state};
+            const tasks = stateCopy[action.todoListID];
+            const newTask = {id: v1(), title: action.title, isDone: false};
+            const newTasks = [newTask, ...tasks];
+            stateCopy[action.todoListID] = newTasks;
+            return stateCopy
         }
 
         default:
@@ -40,9 +46,10 @@ export const removeTaskAC = (taskId: string, todoListID: string): removeTaskActi
         todoListID
     }
 }
-export const action2AC = (title: string):ActionType2 => {
+export const addTaskAC = (title: string, todoListID: string):AddTaskActionType => {
     return {
-        type: '2',
-        title: title
+        type: 'ADD-TASK',
+        title,
+        todoListID
     }
 }
