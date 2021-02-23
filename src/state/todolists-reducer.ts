@@ -21,7 +21,7 @@ export type ChangeTodoListFilterActionType = {
     filter: FilterValuesType
 }
 
-type ActionsType = RemoveTodoListActionType | AddTodoListActionType | ChangeTodoListTitleActionType | ChangeTodoListFilterActionType
+export type ActionsType = RemoveTodoListActionType | AddTodoListActionType | ChangeTodoListTitleActionType | ChangeTodoListFilterActionType
 
 export let todoListID1 = v1();
 export let todoListID2 = v1();
