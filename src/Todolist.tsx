@@ -1,10 +1,11 @@
-import React, {ChangeEvent} from "react";
+import React, {useCallback} from "react";
 import {FilterValuesType} from "./App";
 import './App.css';
 import {AddItemForm} from "./AddItemForm";
 import {EditableSpan} from "./EditableSpan";
-import {Button, Checkbox, IconButton} from "@material-ui/core";
+import {Button, IconButton} from "@material-ui/core";
 import {Delete} from "@material-ui/icons";
+import {Task} from "./Task";
 
 
 export type TaskType = {
@@ -26,21 +27,30 @@ type PropsType = {
     changeTodoListTitle: (id: string, newTitle: string) => void
 }
 
-export function Todolist(props: PropsType) {
+export const Todolist = React.memo((props: PropsType) => {
+    console.log('Todolist is called')
+    const onAllClickHandler = useCallback(() => props.changeFilter("All", props.id), [props.changeFilter, props.id])
+    const onActiveClickHandler = useCallback(() => props.changeFilter("Active", props.id), [props.changeFilter, props.id])
+    const onCompletedClickHandler = useCallback(() => props.changeFilter("Completed", props.id), [props.changeFilter, props.id])
 
-    const onAllClickHandler = () => props.changeFilter("All", props.id)
-    const onActiveClickHandler = () => props.changeFilter("Active", props.id)
-    const onCompletedClickHandler = () => props.changeFilter("Completed", props.id)
     const removeTodoList = () => {
         props.removeTodoList(props.id)
     }
-    const changeTodoListTitle = (newTitle: string) => {
+    const changeTodoListTitle = useCallback((newTitle: string) => {
         props.changeTodoListTitle(props.id, newTitle)
-    }
-    const addTask = (title: string) => {
+    }, [props.changeTodoListTitle, props.id])
+    const addTask = useCallback((title: string) => {
         props.addTask(title, props.id)
-    }
+    }, [props.addTask, props.id])
 
+    let tasksForTodolist = props.tasks;
+
+    if (props.filter === "Completed") {
+        tasksForTodolist = props.tasks.filter(t => t.isDone === true)
+    }
+    if (props.filter === "Active") {
+        tasksForTodolist = props.tasks.filter(t => t.isDone === false)
+    }
     return (
         <div>
             <h3>
@@ -52,29 +62,15 @@ export function Todolist(props: PropsType) {
             <AddItemForm addItem={addTask}/>
             <div>
                 {
-                    props.tasks.map(t => {
-                        const onRemoveHandler = () => props.removeTask(t.id, props.id)
-                        const onChangeStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
-                            props.changeTaskStatus(t.id, e.currentTarget.checked, props.id)
-                        }
-                        const onChangeTitleHandler = (newValue: string) => {
-                            props.changeTaskTitle(t.id, newValue, props.id)
-                        }
-
-                        return (
-                            <div key={t.id} className={t.isDone ? "is-done" : ""}>
-                                <Checkbox
-                                    color="primary"
-                                    checked={t.isDone}
-                                    onChange={onChangeStatusHandler}
-                                />
-                                <EditableSpan title={t.title} onChange={onChangeTitleHandler}/>
-                                <IconButton onClick={onRemoveHandler} color="primary">
-                                    <Delete/>
-                                </IconButton>
-
-                            </div>)
-                    })
+                    tasksForTodolist.map(t => <Task
+                            key={t.id}
+                            task={t}
+                            todolistId={props.id}
+                            removeTask={props.removeTask}
+                            changeTaskStatus={props.changeTaskStatus}
+                            changeTaskTitle={props.changeTaskTitle}
+                        />
+                    )
                 }
 
             </div>
@@ -101,5 +97,5 @@ export function Todolist(props: PropsType) {
 
         </div>
     )
-}
+})
 
